@@ -41,7 +41,6 @@ internal class ItemQueue
             return copy;
         }
         finally
-
         {
             resetEvent.Set();
         }
