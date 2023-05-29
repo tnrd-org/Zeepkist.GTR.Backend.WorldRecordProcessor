@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <AssemblyName>TNRD.Zeepkist.GTR.Backend.WorldRecordProcessor</AssemblyName>
+        <RootNamespace>TNRD.Zeepkist.GTR.Backend.WorldRecordProcessor</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="FluentResults" Version="3.15.2" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
+        <PackageReference Include="RabbitMQ.Client" Version="6.5.0" />
+        <PackageReference Include="Serilog.AspNetCore" Version="7.0.0" />
+        <PackageReference Include="TNRD.Zeepkist.GTR.Database" Version="1.1.0" />
+        <PackageReference Include="TNRD.Zeepkist.GTR.DTOs" Version="3.6.0" />
+    </ItemGroup>
+</Project>
