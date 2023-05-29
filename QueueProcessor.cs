@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using TNRD.Zeepkist.GTR.Backend.WorldRecordProcessor.Rabbit;
 using TNRD.Zeepkist.GTR.Database;
 using TNRD.Zeepkist.GTR.Database.Models;
 using TNRD.Zeepkist.GTR.DTOs.Rabbit;
@@ -10,6 +11,7 @@ internal class QueueProcessor : IHostedService
 {
     private readonly ItemQueue itemQueue;
     private readonly IServiceProvider serviceProvider;
+    private readonly IRabbitPublisher publisher;
     private readonly ILogger<QueueProcessor> logger;
 
     private readonly CancellationTokenSource cts;
@@ -19,12 +21,14 @@ internal class QueueProcessor : IHostedService
     public QueueProcessor(
         ItemQueue itemQueue,
         IServiceProvider serviceProvider,
-        ILogger<QueueProcessor> logger
+        ILogger<QueueProcessor> logger,
+        IRabbitPublisher publisher
     )
     {
         this.itemQueue = itemQueue;
         this.serviceProvider = serviceProvider;
         this.logger = logger;
+        this.publisher = publisher;
 
         cts = new CancellationTokenSource();
     }
@@ -122,6 +126,24 @@ internal class QueueProcessor : IHostedService
 
                 await context.SaveChangesAsync(ct);
                 await transaction.CommitAsync(ct);
+
+                foreach (Record worldRecord in worldRecords)
+                {
+                    publisher.Publish("records",
+                        new RecordId
+                        {
+                            Id = worldRecord.Id
+                        });
+                }
+
+                if (record != null)
+                {
+                    publisher.Publish("records",
+                        new RecordId
+                        {
+                            Id = record.Id
+                        });
+                }
             }
             catch (Exception e)
             {

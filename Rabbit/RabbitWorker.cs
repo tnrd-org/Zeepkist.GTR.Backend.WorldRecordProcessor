@@ -35,6 +35,7 @@ internal class RabbitWorker : IHostedService
         connection = factory.CreateConnection();
         channel = connection.CreateModel();
 
+        channel.ExchangeDeclare(exchange: "records", type: ExchangeType.Fanout);
         channel.ExchangeDeclare(exchange: "wr", type: ExchangeType.Fanout);
 
         string? queueName = channel.QueueDeclare().QueueName;
