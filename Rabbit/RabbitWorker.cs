@@ -11,13 +11,15 @@ internal class RabbitWorker : IHostedService
 {
     private readonly RabbitOptions options;
     private readonly ItemQueue mediaQueue;
+    private readonly IRabbitPublisher publisher;
 
     private IConnection connection = null!;
     private IModel channel = null!;
 
-    public RabbitWorker(IOptions<RabbitOptions> options, ItemQueue mediaQueue)
+    public RabbitWorker(IOptions<RabbitOptions> options, ItemQueue mediaQueue, IRabbitPublisher publisher)
     {
         this.mediaQueue = mediaQueue;
+        this.publisher = publisher;
         this.options = options.Value;
     }
 
@@ -49,6 +51,7 @@ internal class RabbitWorker : IHostedService
             autoAck: true,
             consumer: consumer);
 
+        publisher.Initialize(channel);
         return Task.CompletedTask;
     }
 
