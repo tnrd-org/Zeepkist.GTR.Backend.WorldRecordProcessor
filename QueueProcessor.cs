@@ -111,7 +111,7 @@ internal class QueueProcessor : IHostedService
                 }
 
                 Record? record = await context.Records
-                    .Where(x => x.Level == level)
+                    .Where(x => x.Level == level && x.IsValid)
                     .OrderBy(x => x.Time)
                     .FirstOrDefaultAsync(ct);
 
