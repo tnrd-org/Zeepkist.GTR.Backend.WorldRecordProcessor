@@ -38,6 +38,9 @@ internal class RabbitPublisher : IRabbitPublisher
         catch (Exception e)
         {
             logger.LogError(e, "Failed to publish to RabbitMQ");
+            return;
         }
+
+        logger.LogInformation("Published");
     }
 }
